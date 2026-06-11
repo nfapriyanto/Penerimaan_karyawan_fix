@@ -22,23 +22,54 @@
 
                     <div style="margin-bottom:10px;">
                         <label>Skill</label>
-                        <input type="number" name="skill" min="0" max="100" style="width:100%; padding:8px;">
-                    </div>
+
+                        <select name="skill" style="width:100%; padding:8px;" required>
+                            <option value="">-- Pilih Skill --</option>
+                            <option value="1">Buruk</option>
+                            <option value="2">Cukup</option>
+                            <option value="3">Baik</option>
+                            <option value="4">Sangat Baik</option>
+                         </select>
+                        </div>
 
                     <div style="margin-bottom:10px;">
-                        <label>Pengalaman</label>
-                        <input type="number" name="pengalaman"  min="0" max="100" style="width:100%; padding:8px;">
+                         <label>Pengalaman Kerja</label>
+
+                         <select name="pengalaman" style="width:100%; padding:8px;" required>
+
+                        <option value="">-- Pilih Pengalaman --</option>
+
+                        <option value="1">< 1 Tahun</option>
+                        <option value="2">1 - 2 Tahun</option>
+                        <option value="3">3 - 5 Tahun</option>
+                        <option value="4">> 5 Tahun</option>
+
+                    </select>
                     </div>
 
                     <div style="margin-bottom:10px;">
                         <label>Pendidikan</label>
-                        <input type="number" name="pendidikan"  min="0" max="100" style="width:100%; padding:8px;">
-                    </div>
+
+                         <select name="pendidikan" style="width:100%; padding:8px;" required>
+                            <option value="">-- Pilih Pendidikan --</option>
+                            <option value="1">SMA</option>
+                            <option value="2">D3</option>
+                            <option value="3">S1</option>
+                            <option value="4">S2</option>
+                        </select>
+                        </div>
 
                     <div style="margin-bottom:10px;">
                         <label>Interview</label>
-                        <input type="number" name="interview" style="width:100%; min="0" max="100" padding:8px;">
-                    </div>
+
+                        <select name="interview" style="width:100%; padding:8px;" required>
+                            <option value="">-- Pilih Interview --</option>
+                            <option value="1">Buruk</option>
+                            <option value="2">Cukup</option>
+                            <option value="3">Baik</option>
+                            <option value="4">Sangat Baik</option>
+                        </select>
+                        </div>
 
                     <button type="submit"
                         style="

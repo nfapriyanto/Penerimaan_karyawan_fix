@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Penilaian;
-use App\Models\BobotKriteria;
+use App\Models\BobotAhp;
+use App\Models\HasilTopsis;
 
 class TopsisController extends Controller
 {
@@ -65,14 +66,14 @@ class TopsisController extends Controller
         // =========================
         // 3. BOBOT AHP
         // =========================
-        $bobotData = BobotKriteria::all()->keyBy('kode');
+        $bobot = BobotAhp::pluck('nilai', 'kriteria')->toArray();
 
-        $bobot = [
-            'C1' => $bobotData['C1']->bobot ?? 0.4,
-            'C2' => $bobotData['C2']->bobot ?? 0.3,
-            'C3' => $bobotData['C3']->bobot ?? 0.2,
-            'C4' => $bobotData['C4']->bobot ?? 0.1,
-        ];
+        $bobot = array_merge([
+            'skill' => 0.4,
+            'pengalaman' => 0.3,
+            'pendidikan' => 0.2,
+            'interview' => 0.1,
+        ], $bobot);
 
         // =========================
         // 4. TERBOBOT
@@ -82,15 +83,15 @@ class TopsisController extends Controller
         foreach ($normalisasi as $n) {
             $terbobot[] = [
                 'nama' => $n['nama'],
-                'skill' => $n['skill'] * $bobot['C1'],
-                'pengalaman' => $n['pengalaman'] * $bobot['C2'],
-                'pendidikan' => $n['pendidikan'] * $bobot['C3'],
-                'interview' => $n['interview'] * $bobot['C4'],
+                'skill' => $n['skill'] * $bobot['skill'],
+                'pengalaman' => $n['pengalaman'] * $bobot['pengalaman'],
+                'pendidikan' => $n['pendidikan'] * $bobot['pendidikan'],
+                'interview' => $n['interview'] * $bobot['interview'],
             ];
         }
 
         // =========================
-        // 5. SOLUSI IDEAL (+ / -)
+        // 5. SOLUSI IDEAL
         // =========================
         $aPlus = [
             'skill' => max(array_column($terbobot, 'skill')),
@@ -107,7 +108,7 @@ class TopsisController extends Controller
         ];
 
         // =========================
-        // 6. JARAK + PREFERENSI
+        // 6. HITUNG NILAI PREFERENSI
         // =========================
         $hasil = [];
 
@@ -136,18 +137,34 @@ class TopsisController extends Controller
         }
 
         // =========================
-        // 7. RANKING
+        // 7. SORTING
         // =========================
         usort($hasil, function ($a, $b) {
             return $b['nilai'] <=> $a['nilai'];
         });
 
+        // =========================
+        // 8. TAMBAH RANK (WAJIB SEBELUM SAVE)
+        // =========================
         foreach ($hasil as $i => $h) {
             $hasil[$i]['rank'] = $i + 1;
         }
 
         // =========================
-        // RETURN VIEW
+        // 9. AUTO SAVE KE DATABASE (FIX FINAL)
+        // =========================
+        HasilTopsis::truncate();
+
+        foreach ($hasil as $h) {
+            HasilTopsis::create([
+                'nama' => $h['nama'],
+                'nilai' => $h['nilai'],
+                'rank' => $h['rank']
+            ]);
+        }
+
+        // =========================
+        // RETURN VIEW HRD
         // =========================
         return view('topsis.index', compact(
             'matrix',
@@ -156,4 +173,14 @@ class TopsisController extends Controller
             'hasil'
         ));
     }
+        
+    //=========================
+    // PIMPINAN (AMBIL DARI DB)
+    // =========================
+    public function pimpinan()
+{
+    $hasil = HasilTopsis::orderBy('rank', 'asc')->get();
+
+    return view('pimpinan.dashboard', compact('hasil'));
+}
 }

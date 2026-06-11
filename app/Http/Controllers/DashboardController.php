@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use App\Models\HasilTopsis;
 
 class DashboardController extends Controller
 {
@@ -17,7 +18,10 @@ class DashboardController extends Controller
         }
 
         if (Auth::user()->role == 'pimpinan') {
-            return view('pimpinan.dashboard');
+
+            $hasil = HasilTopsis::orderBy('rank', 'asc')->get();
+
+            return view('pimpinan.dashboard', compact('hasil'));
         }
     }
 }

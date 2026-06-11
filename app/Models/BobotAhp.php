@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class BobotKriteria extends Model
+class BobotAhp extends Model
 {
+    protected $table = 'bobot_ahp';
+
     protected $fillable = [
-        'kriteria_a',
-        'kriteria_b',
+        'kriteria',
         'nilai'
     ];
 }

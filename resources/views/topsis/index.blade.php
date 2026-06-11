@@ -1,11 +1,20 @@
 <x-app-layout>
 
-<div style="padding:20px; background:white; min-height:100vh;">
+<div style="padding:20px; background:#f3f4f6; min-height:100vh; font-family:Arial;">
 
-    <h2>Matriks Awal (Data Penilaian)</h2>
+    <h1 style="margin-bottom:25px; font-size:24px; font-weight:bold;">
+        HASIL PERHITUNGAN TOPSIS
+    </h1>
 
-    <table border="1" width="100%" cellpadding="8">
-        <tr>
+    <!-- ===================== -->
+    <!-- 1. MATRIKS AWAL -->
+    <!-- ===================== -->
+    <h2 style="margin-bottom:10px;">Matriks Awal</h2>
+
+    <table border="1" width="100%" cellpadding="10"
+           style="background:white; margin-bottom:25px; border-collapse:collapse;">
+
+        <tr style="background:#e5e7eb;">
             <th>Nama</th>
             <th>Skill</th>
             <th>Pengalaman</th>
@@ -22,14 +31,18 @@
             <td>{{ $m['interview'] }}</td>
         </tr>
         @endforeach
+
     </table>
 
-    <br><br>
+    <!-- ===================== -->
+    <!-- 2. NORMALISASI -->
+    <!-- ===================== -->
+    <h2 style="margin-bottom:10px;">Normalisasi</h2>
 
-    <h2>Matriks Normalisasi (TOPSIS STEP 2)</h2>
+    <table border="1" width="100%" cellpadding="10"
+           style="background:white; margin-bottom:25px; border-collapse:collapse;">
 
-    <table border="1" width="100%" cellpadding="8">
-        <tr>
+        <tr style="background:#e5e7eb;">
             <th>Nama</th>
             <th>Skill</th>
             <th>Pengalaman</th>
@@ -46,14 +59,18 @@
             <td>{{ number_format($n['interview'], 4) }}</td>
         </tr>
         @endforeach
+
     </table>
 
-        <br><br>
+    <!-- ===================== -->
+    <!-- 3. TERBOBOT -->
+    <!-- ===================== -->
+    <h2 style="margin-bottom:10px;">Terbobot (AHP)</h2>
 
-    <h2>Matriks Terbobot (AHP)</h2>
+    <table border="1" width="100%" cellpadding="10"
+           style="background:white; margin-bottom:25px; border-collapse:collapse;">
 
-    <table border="1" width="100%" cellpadding="8">
-        <tr>
+        <tr style="background:#e5e7eb;">
             <th>Nama</th>
             <th>Skill</th>
             <th>Pengalaman</th>
@@ -70,26 +87,69 @@
             <td>{{ number_format($t['interview'], 4) }}</td>
         </tr>
         @endforeach
+
     </table>
 
-        <br><br>
+    <!-- ===================== -->
+    <!-- 4. KANDIDAT TERBAIK -->
+    <!-- ===================== -->
+    @php
+        $best = $hasil[0] ?? null;
+    @endphp
 
-    <h2>Hasil Akhir & Ranking TOPSIS</h2>
+    @if($best)
+    <div style="background:#16a34a; color:white; padding:15px; border-radius:8px; margin-bottom:25px;">
+        <h2 style="margin:0;">🏆 Kandidat Terpilih</h2>
+        <p style="font-size:18px; margin:5px 0;">
+            {{ $best['nama'] }}
+        </p>
+        <p style="margin:0;">
+            Nilai: {{ number_format($best['nilai'], 4) }}
+        </p>
+    </div>
+    @endif
 
-    <table border="1" width="100%" cellpadding="8">
-        <tr>
+    <!-- ===================== -->
+    <!-- 5. RANKING -->
+    <!-- ===================== -->
+    <h2 style="margin-bottom:10px;">Ranking TOPSIS</h2>
+
+    <table border="1" width="100%" cellpadding="10"
+           style="background:white; margin-bottom:25px; border-collapse:collapse;">
+
+        <tr style="background:#e5e7eb;">
             <th>Rank</th>
             <th>Nama</th>
-            <th>Nilai Preferensi</th>
+            <th>Nilai</th>
+            <th>Status</th>
         </tr>
 
         @foreach($hasil as $h)
-        <tr>
-            <td>{{ $h['rank'] }}</td>
+        <tr @if($h['rank'] == 1) style="background:#dcfce7;" @endif>
+
+            <td style="text-align:center;">{{ $h['rank'] }}</td>
             <td>{{ $h['nama'] }}</td>
-            <td>{{ number_format($h['nilai'], 4) }}</td>
+            <td style="text-align:center;">
+                {{ number_format($h['nilai'], 4) }}
+            </td>
+
+            <td style="text-align:center;">
+
+                @if($h['rank'] == 1)
+                    <span style="background:#16a34a; color:white; padding:5px 10px; border-radius:5px;">
+                        DITERIMA
+                    </span>
+                @else
+                    <span style="background:#dc2626; color:white; padding:5px 10px; border-radius:5px;">
+                        TIDAK DITERIMA
+                    </span>
+                @endif
+
+            </td>
+
         </tr>
         @endforeach
+
     </table>
 
 </div>
