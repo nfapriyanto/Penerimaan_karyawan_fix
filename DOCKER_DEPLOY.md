@@ -53,17 +53,12 @@ php artisan key:generate
 php artisan storage:link
 ```
 
-### Langkah C: Migrasi Database & Import SQL
-Jika Anda ingin menggunakan database default dari file `db_penerimaan_karyawan.sql` yang sudah tersedia:
+### Langkah C: Migrasi Database & Seeding
+Untuk membuat tabel dan mengisi database dengan data awal yang disesuaikan dari `db_penerimaan_karyawan.sql`:
 
 ```bash
-# Jalankan perintah mysql import dari host ke database container
-docker exec -i penerimaan-karyawan-db mysql -u root -proot db_penerimaan_karyawan < db_penerimaan_karyawan.sql
-```
-
-Atau jika ingin menjalankan migrasi Laravel dari awal:
-```bash
-docker-compose exec app php artisan migrate
+# Jalankan migrasi dan seeder secara bersamaan di dalam container
+docker-compose exec app php artisan migrate --seed
 ```
 
 ---
